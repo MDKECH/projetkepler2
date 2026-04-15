@@ -14,6 +14,53 @@
         .text-echostar { color: #f31260; }
     </style>
 </head>
+<section class="max-w-7xl mx-auto px-6 py-12">
+    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+        <h3 class="text-2xl font-black text-slate-900 mb-6">Discussion Investor</h3>
+        
+        <div class="mb-8 bg-slate-50 p-6 rounded-2xl">
+            <input id="comm_pseudo" type="text" placeholder="Pseudo" class="w-full mb-3 p-3 rounded-xl border border-slate-200 outline-none focus:border-echostar">
+            <textarea id="comm_text" placeholder="Votre analyse sur SATS..." class="w-full p-3 rounded-xl border border-slate-200 outline-none focus:border-echostar h-24"></textarea>
+            <button onclick="postComment()" class="mt-3 bg-echostar text-white px-8 py-3 rounded-full font-bold hover:opacity-90 transition">Publier</button>
+        </div>
+
+        <div id="comments_list" class="space-y-4">
+            <p class="text-slate-400 animate-pulse">Chargement des analyses...</p>
+        </div>
+    </div>
+</section>
+
+<script>
+    const API_URL = 'https://TON-APP-BACKEND.up.railway.app'; // On changera ça après
+
+    async function loadComments() {
+        const res = await fetch(`${API_URL}/comments`);
+        const data = await res.json();
+        const container = document.getElementById('comments_list');
+        container.innerHTML = data.map(c => `
+            <div class="border-b border-slate-100 pb-4">
+                <p class="font-bold text-slate-800">${c.pseudo} <span class="text-xs font-normal text-slate-400">${new Date(c.created_at).toLocaleDateString()}</span></p>
+                <p class="text-slate-600">${c.content}</p>
+            </div>
+        `).join('');
+    }
+
+    async function postComment() {
+        const pseudo = document.getElementById('comm_pseudo').value;
+        const content = document.getElementById('comm_text').value;
+        
+        await fetch(`${API_URL}/comments`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pseudo, content })
+        });
+        
+        document.getElementById('comm_text').value = '';
+        loadComments();
+    }
+
+    loadComments();
+</script>
 <body class="bg-[#F8F9FB] font-sans text-slate-900">
 
     <nav class="p-5 bg-white shadow-sm flex justify-between items-center sticky top-0 z-50">
