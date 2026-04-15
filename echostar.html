@@ -31,35 +31,58 @@
 </section>
 
 <script>
-    const API_URL = 'https://projetkepler2-production.up.railway.app';
+    // 1. L'URL doit être exactement celle-là, SANS le /echostar à la fin
+    const API_URL = 'https://projetkepler2-production.up.railway.app'; 
 
     async function loadComments() {
-        const res = await fetch(`${API_URL}/comments`);
-        const data = await res.json();
-        const container = document.getElementById('comments_list');
-        container.innerHTML = data.map(c => `
-            <div class="border-b border-slate-100 pb-4">
-                <p class="font-bold text-slate-800">${c.pseudo} <span class="text-xs font-normal text-slate-400">${new Date(c.created_at).toLocaleDateString()}</span></p>
-                <p class="text-slate-600">${c.content}</p>
-            </div>
-        `).join('');
+        try {
+            const res = await fetch(`${API_URL}/comments`);
+            const data = await res.json();
+            const container = document.getElementById('comments_list');
+            
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-slate-400 italic">Aucun commentaire pour le moment. Soyez le premier !</p>';
+                return;
+            }
+
+            container.innerHTML = data.map(c => `
+                <div class="border-b border-slate-100 pb-4 mb-4">
+                    <p class="font-bold text-slate-800">${c.pseudo} <span class="text-xs font-normal text-slate-400">${new Date(c.created_at).toLocaleDateString()}</span></p>
+                    <p class="text-slate-600">${c.content}</p>
+                </div>
+            `).join('');
+        } catch (err) {
+            console.error("Erreur chargement:", err);
+        }
     }
 
     async function postComment() {
         const pseudo = document.getElementById('comm_pseudo').value;
         const content = document.getElementById('comm_text').value;
+
+        if (!pseudo || !content) {
+            alert("Remplis les deux champs !");
+            return;
+        }
         
-        await fetch(`${API_URL}/comments`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ pseudo, content })
-        });
-        
-        document.getElementById('comm_text').value = '';
-        loadComments();
+        try {
+            const res = await fetch(`${API_URL}/comments`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pseudo, content })
+            });
+            
+            if (res.ok) {
+                document.getElementById('comm_text').value = '';
+                loadComments(); // On recharge la liste après avoir posté
+            }
+        } catch (err) {
+            alert("Erreur lors de la publication.");
+        }
     }
 
-    loadComments();
+    // Lancer le chargement au démarrage
+    window.onload = loadComments;
 </script>
 <body class="bg-[#F8F9FB] font-sans text-slate-900">
 
