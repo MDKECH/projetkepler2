@@ -3,133 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nebius Group | Analytics & Market</title>
+    <title>Echostar | Market Analytics</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .modal-active { display: flex !important; animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
         .animate-scroll { display: inline-block; animation: scroll 25s linear infinite; }
-        .bg-nebius { background-color: #0047FF; }
-        .text-nebius { color: #0047FF; }
+        .bg-echostar { background-color: #f31260; } /* Changement de couleur pour Echostar */
+        .text-echostar { color: #f31260; }
     </style>
 </head>
 <body class="bg-[#F8F9FB] font-sans text-slate-900">
+
     <nav class="p-5 bg-white shadow-sm flex justify-between items-center sticky top-0 z-50">
         <div class="flex items-center space-x-4">
-            <img src="https://nebius.com/favicon.ico" alt="Nebius Logo" class="w-8 h-8">
-            <h1 class="text-2xl font-bold tracking-tight">NEBIUS <span class="text-gray-400 font-light">GROUP</span></h1>
+            <div class="w-8 h-8 bg-echostar rounded-lg flex items-center justify-center text-white font-bold">E</div>
+            <h1 class="text-2xl font-bold tracking-tight">ECHOSTAR <span class="text-gray-400 font-light">CORP</span></h1>
         </div>
         <div class="hidden md:flex space-x-8 font-medium text-sm text-slate-600">
-            <a href="#analytics" class="hover:text-nebius transition uppercase tracking-wider">Analytics</a>
-            <a href="#sentiment" class="hover:text-nebius transition uppercase tracking-wider">Sentiment</a>
+            <a href="#analytics" class="hover:text-echostar transition uppercase tracking-wider">Live Chart</a>
+            <a href="#market" class="hover:text-echostar transition uppercase tracking-wider">Market Data</a>
         </div>
-        <button id="btnCommencer" class="bg-nebius text-white px-6 py-2 rounded-full font-bold hover:opacity-90 transition shadow-md">
+        <button id="btnCommencer" class="bg-echostar text-white px-6 py-2 rounded-full font-bold hover:opacity-90 transition shadow-md">
             S'ABONNER
         </button>
     </nav>
+
     <div class="bg-slate-900 text-white py-2 overflow-hidden whitespace-nowrap border-y border-slate-800">
         <div class="animate-scroll">
-            <span class="mx-12 font-mono text-sm">🔵 <span class="font-bold uppercase">NASDAQ: NBIS</span> : <span class="text-green-400">158.95 USD (+2.84%)</span></span>
-            <span class="mx-12 font-mono text-sm">⚪ <span class="font-bold uppercase">NASDAQ: NVDA</span> : <span class="text-green-400">196.51 USD (+3.80%)</span></span>
-            <span class="mx-12 font-mono text-sm">⚪ <span class="font-bold uppercase">NASDAQ: MSFT</span> : <span class="text-green-400">393.11 USD (+2.27%)</span></span>
+            <span class="mx-12 font-mono text-sm">🔴 <span class="font-bold uppercase">NASDAQ: SATS</span> : <span class="text-red-400">22.45 USD (-1.12%)</span></span>
+            <span class="mx-12 font-mono text-sm">⚪ <span class="font-bold uppercase">BTC: USD</span> : <span class="text-green-400">64,231.50 USD (+0.45%)</span></span>
+            <span class="mx-12 font-mono text-sm">⚪ <span class="font-bold uppercase">DISH: USD</span> : <span class="text-slate-400">Merged / SATS</span></span>
         </div>
     </div>
+
     <main class="max-w-7xl mx-auto px-6 py-12">
-        <section id="analytics" class="grid lg:grid-cols-3 gap-8 mb-12">
-            <div class="lg:col-span-2 bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+        
+        <section id="analytics" class="mb-12">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
                 <div class="flex justify-between items-center mb-6">
                     <div>
-                        <h3 class="text-slate-400 font-bold text-xs uppercase tracking-widest">Evolution du cours</h3>
-                        <p class="text-2xl font-black text-slate-900">NBIS Performance</p>
-                    </div>
-                    <div class="flex space-x-2">
-                        <span class="bg-blue-50 text-nebius px-3 py-1 rounded-full text-xs font-bold">1 AN</span>
+                        <h3 class="text-slate-400 font-bold text-xs uppercase tracking-widest">Analyse en temps réel</h3>
+                        <p class="text-2xl font-black text-slate-900">SATS (Echostar) Interactive Chart</p>
                     </div>
                 </div>
-                <div class="h-[350px] w-full">
-                    <canvas id="nebiusChart"></canvas>
+                
+                <div class="h-[500px] w-full border border-slate-100 rounded-xl overflow-hidden">
+                    <div id="tradingview_echostar" class="h-full"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                    <script type="text/javascript">
+                    new TradingView.widget({
+                        "autosize": true,
+                        "symbol": "NASDAQ:SATS",
+                        "interval": "D",
+                        "timezone": "Etc/UTC",
+                        "theme": "light",
+                        "style": "1",
+                        "locale": "fr",
+                        "toolbar_bg": "#f1f3f6",
+                        "enable_publishing": false,
+                        "allow_symbol_change": true,
+                        "container_id": "tradingview_echostar"
+                    });
+                    </script>
                 </div>
-            </div>
-            <div id="sentiment" class="bg-slate-900 p-6 rounded-3xl shadow-2xl border border-slate-800 flex flex-col">
-                <h3 class="text-white font-bold text-sm uppercase tracking-widest mb-6 flex items-center">
-                    <span class="h-2 w-2 bg-purple-500 rounded-full mr-3 animate-pulse"></span>
-                    Prediction Market
-                </h3>
-                <div class="rounded-xl overflow-hidden bg-black border border-slate-700 flex-grow">
-                    <iframe
-                        title="Polymarket Embed"
-                        src="https://embed.polymarket.com/market?market=will-nebius-group-be-acquired-before-2027-514&theme=dark&height=300"
-                        width="100%" height="300" frameborder="0" allowtransparency="true">
-                    </iframe>
                 </div>
-            </div>
         </section>
-        <section class="grid md:grid-cols-3 gap-6">
+
+        <section id="market" class="grid md:grid-cols-3 gap-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <p class="text-slate-400 font-bold text-xs uppercase">Prix Actuel</p>
-                <p class="text-3xl font-black text-slate-900">$158.95</p>
+                <p class="text-slate-400 font-bold text-xs uppercase">Prix SATS</p>
+                <p class="text-3xl font-black text-slate-900">$22.45</p>
             </div>
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <p class="text-slate-400 font-bold text-xs uppercase">Capacité GPU</p>
-                <p class="text-3xl font-black text-slate-900">35k H100s</p>
+                <p class="text-slate-400 font-bold text-xs uppercase">Market Cap</p>
+                <p class="text-3xl font-black text-slate-900">6.42B</p>
             </div>
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <p class="text-slate-400 font-bold text-xs uppercase">Objectif (GS)</p>
-                <p class="text-3xl font-black text-nebius">$205.00</p>
+                <p class="text-slate-400 font-bold text-xs uppercase">Status</p>
+                <p class="text-3xl font-black text-echostar">Bullish</p>
             </div>
         </section>
     </main>
+
     <div id="maModale" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-md items-center justify-center z-[100] p-4">
         <div class="bg-white p-10 rounded-3xl shadow-2xl max-w-md w-full">
-            <h3 class="text-3xl font-black mb-2">Alertes Investor</h3>
-            <p class="text-slate-500 mb-8">Ne manquez aucun mouvement de NBIS.</p>
-            <input type="email" placeholder="email@finance.com" class="w-full border-2 border-slate-100 p-4 rounded-xl mb-4 outline-none focus:border-nebius">
-            <button id="btnEnvoyer" class="w-full bg-nebius text-white py-4 rounded-xl font-bold">S'inscrire</button>
-            <button id="btnFermer" class="w-full text-slate-400 mt-4">Fermer</button>
+            <h3 class="text-3xl font-black mb-2">Alerte SATS</h3>
+            <p class="text-slate-500 mb-8">Recevez les notifications sur les mouvements d'Echostar Corp.</p>
+            <input type="email" placeholder="votre@email.com" class="w-full border-2 border-slate-100 p-4 rounded-xl mb-4 outline-none focus:border-echostar">
+            <button id="btnEnvoyer" class="w-full bg-echostar text-white py-4 rounded-xl font-bold hover:brightness-110">S'inscrire</button>
+            <button id="btnFermer" class="w-full text-slate-400 mt-4 text-sm">Fermer</button>
         </div>
     </div>
+
     <script>
-        const ctx = document.getElementById('nebiusChart').getContext('2d');
-        // Création du graphique
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Juin 24', 'Août 24', 'Oct 24', 'Déc 24', 'Fév 25', 'Avr 25', 'Juin 25', 'Sept 25', 'Jan 26', 'Avril 26'],
-                datasets: [{
-                    label: 'Prix NBIS (USD)',
-                    data: [18, 22, 21, 35, 48, 62, 85, 110, 142, 158.95],
-                    borderColor: '#0047FF',
-                    backgroundColor: 'rgba(0, 71, 255, 0.1)',
-                    fill: true,
-                    tension: 0.4, // Rend la courbe lisse
-                    borderWidth: 4,
-                    pointRadius: 0,
-                    pointHoverRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } },
-                    y: { 
-                        grid: { borderDash: [5, 5], color: '#e2e8f0' },
-                        ticks: { color: '#94a3b8', callback: (value) => '$' + value }
-                    }
-                }
-            }
-        });
         // Gestion de la modale
         const btnCommencer = document.getElementById('btnCommencer');
         const modale = document.getElementById('maModale');
         const btnFermer = document.getElementById('btnFermer');
+
         btnCommencer.onclick = () => modale.classList.add('modal-active');
         btnFermer.onclick = () => modale.classList.remove('modal-active');
+
+        // Fermer la modale en cliquant à l'extérieur
+        window.onclick = (event) => {
+            if (event.target == modale) {
+                modale.classList.remove('modal-active');
+            }
+        }
     </script>
 </body>
 </html>
