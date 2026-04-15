@@ -10,94 +10,44 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
         .animate-scroll { display: inline-block; animation: scroll 25s linear infinite; }
-        .bg-echostar { background-color: #f31260; } /* Changement de couleur pour Echostar */
+        .bg-echostar { background-color: #f31260; }
         .text-echostar { color: #f31260; }
+        .group:hover .group-hover\:visible { visibility: visible; }
+        .group:hover .group-hover\:opacity-100 { opacity: 1; }
     </style>
 </head>
-<section class="max-w-7xl mx-auto px-6 py-12">
-    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-        <h3 class="text-2xl font-black text-slate-900 mb-6">Discussion Investor</h3>
-        
-        <div class="mb-8 bg-slate-50 p-6 rounded-2xl">
-            <input id="comm_pseudo" type="text" placeholder="Pseudo" class="w-full mb-3 p-3 rounded-xl border border-slate-200 outline-none focus:border-echostar">
-            <textarea id="comm_text" placeholder="Votre analyse sur SATS..." class="w-full p-3 rounded-xl border border-slate-200 outline-none focus:border-echostar h-24"></textarea>
-            <button onclick="postComment()" class="mt-3 bg-echostar text-white px-8 py-3 rounded-full font-bold hover:opacity-90 transition">Publier</button>
-        </div>
-
-        <div id="comments_list" class="space-y-4">
-            <p class="text-slate-400 animate-pulse">Chargement des analyses...</p>
-        </div>
-    </div>
-</section>
-
-<script>
-    // 1. L'URL doit être exactement celle-là, SANS le /echostar à la fin
-    const API_URL = 'https://projetkepler2-production.up.railway.app'; 
-
-    async function loadComments() {
-        try {
-            const res = await fetch(`${API_URL}/comments`);
-            const data = await res.json();
-            const container = document.getElementById('comments_list');
-            
-            if (data.length === 0) {
-                container.innerHTML = '<p class="text-slate-400 italic">Aucun commentaire pour le moment. Soyez le premier !</p>';
-                return;
-            }
-
-            container.innerHTML = data.map(c => `
-                <div class="border-b border-slate-100 pb-4 mb-4">
-                    <p class="font-bold text-slate-800">${c.pseudo} <span class="text-xs font-normal text-slate-400">${new Date(c.created_at).toLocaleDateString()}</span></p>
-                    <p class="text-slate-600">${c.content}</p>
-                </div>
-            `).join('');
-        } catch (err) {
-            console.error("Erreur chargement:", err);
-        }
-    }
-
-    async function postComment() {
-        const pseudo = document.getElementById('comm_pseudo').value;
-        const content = document.getElementById('comm_text').value;
-
-        if (!pseudo || !content) {
-            alert("Remplis les deux champs !");
-            return;
-        }
-        
-        try {
-            const res = await fetch(`${API_URL}/comments`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ pseudo, content })
-            });
-            
-            if (res.ok) {
-                document.getElementById('comm_text').value = '';
-                loadComments(); // On recharge la liste après avoir posté
-            }
-        } catch (err) {
-            alert("Erreur lors de la publication.");
-        }
-    }
-
-    // Lancer le chargement au démarrage
-    window.onload = loadComments;
-</script>
 <body class="bg-[#F8F9FB] font-sans text-slate-900">
 
     <nav class="p-5 bg-white shadow-sm flex justify-between items-center sticky top-0 z-50">
         <div class="flex items-center space-x-4">
-            <div class="w-8 h-8 bg-echostar rounded-lg flex items-center justify-center text-white font-bold">E</div>
-            <h1 class="text-2xl font-bold tracking-tight">ECHOSTAR <span class="text-gray-400 font-light">CORP</span></h1>
+            <a href="/" class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white font-black shadow-lg">K</a>
+            <h1 class="text-2xl font-black tracking-tighter">KEPLER <span class="text-gray-400 font-light italic">LABS</span></h1>
         </div>
-        <div class="hidden md:flex space-x-8 font-medium text-sm text-slate-600">
-            <a href="#analytics" class="hover:text-echostar transition uppercase tracking-wider">Live Chart</a>
-            <a href="#market" class="hover:text-echostar transition uppercase tracking-wider">Market Data</a>
+
+        <div class="relative group">
+            <button class="bg-slate-100 hover:bg-slate-200 text-slate-900 px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center space-x-2">
+                <span>EXPLORER</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            
+            <div class="absolute right-0 mt-2 w-56 bg-white border border-slate-100 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 overflow-hidden">
+                <div class="p-2">
+                    <a href="/" class="block px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl flex items-center space-x-3">
+                        <span class="w-2 h-2 bg-slate-400 rounded-full"></span>
+                        <span>Accueil</span>
+                    </a>
+                    <hr class="my-1 border-slate-50">
+                    <a href="/echostar" class="block px-4 py-3 text-sm font-bold text-slate-700 hover:bg-red-50 hover:text-red-500 rounded-xl flex items-center space-x-3">
+                        <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                        <span>Echostar (SATS)</span>
+                    </a>
+                    <a href="/nebius" class="block px-4 py-3 text-sm font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl flex items-center space-x-3">
+                        <span class="w-2 h-2 bg-blue-600 rounded-full"></span>
+                        <span>Nebius Group</span>
+                    </a>
+                </div>
+            </div>
         </div>
-        <button id="btnCommencer" class="bg-echostar text-white px-6 py-2 rounded-full font-bold hover:opacity-90 transition shadow-md">
-            S'ABONNER
-        </button>
     </nav>
 
     <div class="bg-slate-900 text-white py-2 overflow-hidden whitespace-nowrap border-y border-slate-800">
@@ -109,13 +59,12 @@
     </div>
 
     <main class="max-w-7xl mx-auto px-6 py-12">
-        
         <section id="analytics" class="mb-12">
             <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
                 <div class="flex justify-between items-center mb-6">
                     <div>
                         <h3 class="text-slate-400 font-bold text-xs uppercase tracking-widest">Analyse en temps réel</h3>
-                        <p class="text-2xl font-black text-slate-900">SATS (Echostar) Interactive Chart</p>
+                        <p class="text-2xl font-black text-slate-900">SATS Interactive Chart</p>
                     </div>
                 </div>
                 
@@ -138,10 +87,10 @@
                     });
                     </script>
                 </div>
-                </div>
+            </div>
         </section>
 
-        <section id="market" class="grid md:grid-cols-3 gap-6">
+        <section id="market" class="grid md:grid-cols-3 gap-6 mb-12">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                 <p class="text-slate-400 font-bold text-xs uppercase">Prix SATS</p>
                 <p class="text-3xl font-black text-slate-900">$22.45</p>
@@ -155,33 +104,73 @@
                 <p class="text-3xl font-black text-echostar">Bullish</p>
             </div>
         </section>
+
+        <section class="mb-12">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                <h3 class="text-2xl font-black text-slate-900 mb-6">Discussion Investor</h3>
+                <div class="mb-8 bg-slate-50 p-6 rounded-2xl">
+                    <input id="comm_pseudo" type="text" placeholder="Pseudo" class="w-full mb-3 p-3 rounded-xl border border-slate-200 outline-none focus:border-echostar">
+                    <textarea id="comm_text" placeholder="Votre analyse sur SATS..." class="w-full p-3 rounded-xl border border-slate-200 outline-none focus:border-echostar h-24"></textarea>
+                    <button onclick="postComment()" class="mt-3 bg-echostar text-white px-8 py-3 rounded-full font-bold hover:opacity-90 transition">Publier</button>
+                </div>
+                <div id="comments_list" class="space-y-4">
+                    <p class="text-slate-400 animate-pulse">Chargement des analyses...</p>
+                </div>
+            </div>
+        </section>
     </main>
 
     <div id="maModale" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-md items-center justify-center z-[100] p-4">
         <div class="bg-white p-10 rounded-3xl shadow-2xl max-w-md w-full">
             <h3 class="text-3xl font-black mb-2">Alerte SATS</h3>
-            <p class="text-slate-500 mb-8">Recevez les notifications sur les mouvements d'Echostar Corp.</p>
+            <p class="text-slate-500 mb-8">Recevez les notifications.</p>
             <input type="email" placeholder="votre@email.com" class="w-full border-2 border-slate-100 p-4 rounded-xl mb-4 outline-none focus:border-echostar">
-            <button id="btnEnvoyer" class="w-full bg-echostar text-white py-4 rounded-xl font-bold hover:brightness-110">S'inscrire</button>
+            <button class="w-full bg-echostar text-white py-4 rounded-xl font-bold">S'inscrire</button>
             <button id="btnFermer" class="w-full text-slate-400 mt-4 text-sm">Fermer</button>
         </div>
     </div>
 
     <script>
-        // Gestion de la modale
-        const btnCommencer = document.getElementById('btnCommencer');
-        const modale = document.getElementById('maModale');
-        const btnFermer = document.getElementById('btnFermer');
+        const API_URL = 'https://projetkepler2-production.up.railway.app'; 
 
-        btnCommencer.onclick = () => modale.classList.add('modal-active');
-        btnFermer.onclick = () => modale.classList.remove('modal-active');
-
-        // Fermer la modale en cliquant à l'extérieur
-        window.onclick = (event) => {
-            if (event.target == modale) {
-                modale.classList.remove('modal-active');
-            }
+        async function loadComments() {
+            try {
+                const res = await fetch(`${API_URL}/comments`);
+                const data = await res.json();
+                const container = document.getElementById('comments_list');
+                if (data.length === 0) {
+                    container.innerHTML = '<p class="text-slate-400 italic">Aucun commentaire pour le moment.</p>';
+                    return;
+                }
+                container.innerHTML = data.map(c => `
+                    <div class="border-b border-slate-100 pb-4 mb-4">
+                        <p class="font-bold text-slate-800">${c.pseudo} <span class="text-xs font-normal text-slate-400">${new Date(c.created_at).toLocaleDateString()}</span></p>
+                        <p class="text-slate-600">${c.content}</p>
+                    </div>
+                `).join('');
+            } catch (err) { console.error("Erreur chargement:", err); }
         }
+
+        async function postComment() {
+            const pseudo = document.getElementById('comm_pseudo').value;
+            const content = document.getElementById('comm_text').value;
+            if (!pseudo || !content) { alert("Remplis les deux champs !"); return; }
+            try {
+                const res = await fetch(`${API_URL}/comments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pseudo, content })
+                });
+                if (res.ok) { document.getElementById('comm_text').value = ''; loadComments(); }
+            } catch (err) { alert("Erreur lors de la publication."); }
+        }
+
+        window.onload = loadComments;
+
+        // Gestion modale
+        const btnFermer = document.getElementById('btnFermer');
+        const modale = document.getElementById('maModale');
+        btnFermer.onclick = () => modale.classList.remove('modal-active');
     </script>
 </body>
 </html>
